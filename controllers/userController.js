@@ -3,12 +3,8 @@ const jwt = require('jsonwebtoken');
 const ApiError = require('../error/ApiError.js');
 const User = require('../models/models.js')
 
-const generateJwt = (email, id) => {
-    return jwt.sign(
-        {id: id, email: email}, 
-        process.env.SECRET_KEY,
-        {expiresIn: '24h'}
-        )
+const generateJwt = (email, id, role) => {
+    return jwt.sign({id: id, email: email, role}, process.env.SECRET_KEY, {expiresIn: '24h'})
 }
  
 
@@ -16,7 +12,7 @@ const generateJwt = (email, id) => {
 class UserController {
 
     async registration(req, res, next) {
-        const {email, password} = req.body;
+        const {email, password, role} = req.body;
 
 
         if (!email || !password) {
@@ -31,9 +27,10 @@ class UserController {
 
         const hashPassword = await bcrypt.hash(password, 5);
 
-        const user = await User.create({email, password: hashPassword});
+        const user = await User.create({email, password: hashPassword, role});
 
-        const token = generateJwt(user.id, user.email);
+        const token = generateJwt(user.email, user.id, user.role);
+
 
         return res.json(token);
     }
@@ -53,7 +50,8 @@ class UserController {
             return next(ApiError.badRequest("Something wrong with password."))
         }
 
-        const token = generateJwt(user.id, user.email)
+        const token = generateJwt(user.email, user.id, user.role);
+
 
         return res.json(token)
 
