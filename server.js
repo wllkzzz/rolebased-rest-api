@@ -20,9 +20,7 @@ const start = async () => {
         app.listen(PORT, () => {console.log(`Server has been started on PORT: ${PORT}`);})
 
     } catch (error) {
-
-       
-
+        console.error(`Error starting server: ${error.message}`);
     }
 }
 
