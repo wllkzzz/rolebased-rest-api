@@ -10,7 +10,6 @@ User Authentication
 |:-------|:------|:-------------|
 | POST | /user/registration | User registration |
 | POST | /user/login | User login |
-| GET | /livez  | Liveness status used by Kubernetes liveness probe |
 
 Admin Operations (Requires Authentication)
 | Method | Path  | Description |
